@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 import { Sensor } from "./state/sensor.model";
-import { SensorsQuery } from "~/app/sensors/state/sensor.query";
+import { SensorsQuery } from "./state/sensor.query";
 
 @Component({
   selector: "ns-details",

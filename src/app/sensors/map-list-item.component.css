@@ -1,6 +1,9 @@
 .item {
   color: #5dbaf9;
-  background-color: white
+  background-color: white;
+  border-radius: 12;
+  border-width: 0;
+  border-color: transparent;
 }
 
 .item>Button {

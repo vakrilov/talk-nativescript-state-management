@@ -6,7 +6,7 @@ import { AppComponent } from "./app.component";
 import { MapListComponent } from "./sensors/map-list.component";
 import { SensorDetailComponent } from "./sensors/sensor-detail.component";
 import { MapListItemComponent } from './sensors/map-list-item.component';
-import { MapMarkerComponent } from "~/app/sensors/map-marker.component";
+import { MapMarkerComponent } from "./sensors/map-marker.component";
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
