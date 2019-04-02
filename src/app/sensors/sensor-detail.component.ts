@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
-import { Sensor } from "./sensor.model";
-import { SensorService } from "./sensor.service";
+import { Sensor } from "./state/sensor.model";
+import { SensorsQuery } from "~/app/sensors/state/sensor.query";
 
 @Component({
   selector: "ns-details",
@@ -14,11 +14,11 @@ export class SensorDetailComponent {
     sensor: Sensor;
 
     constructor(
-        private service: SensorService,
+        private service: SensorsQuery,
         private route: ActivatedRoute
     ) {
         const id = this.route.snapshot.params.id;
-        this.sensor = this.service.getItem(id);
+        this.sensor = this.service.getEntity(id);
     }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
-import { Sensor } from '~/app/sensors/sensor.model';
+import { Sensor } from './state/sensor.model';
 
 @Component({
   selector: 'ns-map-list-item',

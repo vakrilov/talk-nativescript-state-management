@@ -1,11 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-
-import { Sensor } from "./sensor.model";
-import { SensorService } from "./sensor.service";
-import { MapBoxAccessToken } from "../../constants";
-import { MapboxViewApi, MapboxMarker } from "nativescript-mapbox";
-import { RouterExtensions } from "nativescript-angular/router";
 import { Observable } from "rxjs";
+
+import { MapboxViewApi } from "nativescript-mapbox";
+import { RouterExtensions } from "nativescript-angular/router";
+
+import { MapBoxAccessToken } from "../../constants";
+import { Sensor, SensorsQuery, SensorsStore } from "./state";
 
 @Component({
   selector: "ns-items",
@@ -17,12 +17,13 @@ export class MapListComponent implements OnInit {
   mapBoxViewApi: MapboxViewApi;
 
   sensors$: Observable<Sensor[]>;
-  currentSensorId: string;
+  active$: Observable<Sensor>;
 
-  constructor(private service: SensorService, private router: RouterExtensions) { }
+  constructor(private query: SensorsQuery, private store: SensorsStore, private router: RouterExtensions) { }
 
   ngOnInit(): void {
-    this.sensors$ = this.service.getItems();
+    this.sensors$ = this.query.selectAll();
+    this.active$ = this.query.selectActive();
   }
 
   onMapReady(args): void {
@@ -30,13 +31,13 @@ export class MapListComponent implements OnInit {
   }
 
   selectSensor(sensor: Sensor, shouldNavigate: boolean = false) {
-    const isSame = this.currentSensorId === sensor.id;
+    const isSame = this.query.getActiveId() === sensor.id;
 
     if (isSame && shouldNavigate) {
       this.router.navigateByUrl("/sensor/" + sensor.id)
       return;
     }
 
-    this.currentSensorId = sensor.id;
+    this.store.setActive(sensor.id);
   }
 }

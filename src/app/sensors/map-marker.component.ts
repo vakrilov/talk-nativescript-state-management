@@ -1,9 +1,9 @@
-import { Component, OnInit, SkipSelf, ElementRef, Input, Output, EventEmitter, SimpleChanges, OnChanges, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, Output, EventEmitter, SimpleChanges, OnChanges, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 
-import { Sensor } from "./sensor.model";
 import { MapboxMarker, MapboxViewApi } from "nativescript-mapbox";
 import { registerElement } from "nativescript-angular/element-registry";
 import { Placeholder } from "tns-core-modules/ui/placeholder";
+import { Sensor } from "./state/sensor.model";
 
 registerElement("ns-map-marker", () => Placeholder, { skipAddToDom: true })
 @Component({
