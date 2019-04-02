@@ -2,8 +2,9 @@
 import { platformNativeScriptDynamic } from "nativescript-angular/platform";
 
 import { AppModule } from "./app/app.module";
-
 import { registerElement } from "nativescript-angular/element-registry";
+import "./livesync-navigation";
+
 registerElement("Mapbox", () => require("nativescript-mapbox").MapboxView);
 
 platformNativeScriptDynamic().bootstrapModule(AppModule);
