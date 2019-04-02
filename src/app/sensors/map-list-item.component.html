@@ -1,7 +1,7 @@
 <GridLayout rows="20, 20, 20" columns="*, auto" class="p-5 m-5 item" (tap)="select.next(sensor)"
     [class.selected]="selected">
     <Label row="0" [text]="'id: ' + sensor.id" class="font-weight-bold"></Label>
-    <Label row="1" [text]="sensor.description"></Label>
+    <Label row="1" [text]="'description: ' + sensor.description"></Label>
     <Label row="2" [text]="'value: ' + sensor.value"></Label>
     <Button col="1" rowSpan="3" text=">"></Button>
 </GridLayout>

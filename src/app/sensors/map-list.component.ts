@@ -4,6 +4,7 @@ import { Sensor } from "./sensor.model";
 import { SensorService } from "./sensor.service";
 import { MapBoxAccessToken } from "../../constants";
 import { MapboxViewApi, MapboxMarker } from "nativescript-mapbox";
+import { RouterExtensions } from "nativescript-angular/router";
 
 type SensorVM = Sensor & { marker?: MapboxMarker };
 
@@ -18,7 +19,7 @@ export class MapListComponent implements OnInit {
     currentSensor: SensorVM;
     mapView: MapboxViewApi;
 
-    constructor(private service: SensorService) { }
+    constructor(private service: SensorService, private router: RouterExtensions) { }
 
     ngOnInit(): void {
         this.sensors = this.service.getItems();
@@ -29,20 +30,22 @@ export class MapListComponent implements OnInit {
         this.renderMap();
     }
 
-    selectSensor(selectedSensor: Sensor) {
+    selectSensor(selectedSensor: SensorVM, shouldNavigate: boolean = false) {
         console.log('---> selectSensor', selectedSensor.id);
-        if (this.currentSensor) {
-            if (this.currentSensor === selectedSensor) {
-                console.log('----> Navigate to customer!');
-                return;
-            } else {
-                this.currentSensor.marker.update({ ...this.currentSensor.marker, selected: false });
-                this.currentSensor = null;
-            }
+
+        const selectSameSensor = this.currentSensor && this.currentSensor.id === selectedSensor.id;
+
+        if (selectSameSensor && shouldNavigate) {
+            console.log('----> Navigate to sensor!');
+            this.router.navigateByUrl("/sensor/" + selectedSensor.id)
+            return;
+        }
+
+        if (!selectSameSensor) {
+            selectedSensor.marker.update({ ...selectedSensor.marker, selected: true });
         }
 
         this.currentSensor = selectedSensor;
-        this.currentSensor.marker.update({ ...this.currentSensor.marker, selected: true });
     }
 
     private createMarker(s: SensorVM): MapboxMarker {

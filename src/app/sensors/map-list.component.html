@@ -10,7 +10,7 @@
 
     <StackLayout row="2" verticalAlignment="bottom" horizontalAlignment="center">
         <ns-map-list-item *ngFor="let sensor of sensors" [sensor]="sensor" [selected]="sensor === currentSensor"
-            (select)="selectSensor($event)">
+            (select)="selectSensor($event, true)">
         </ns-map-list-item>
     </StackLayout>
 </GridLayout>
