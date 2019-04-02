@@ -2,18 +2,32 @@
 </ActionBar>
 
 <GridLayout rows="* 250" columns="*">
-  <Mapbox rowSpan="2" [accessToken]="mapBoxToken" mapStyle="streets" hideCompass="true" zoomLevel="13"
-    showUserLocation="false" disableZoom="false" disableRotation="false" disableScroll="false" disableTilt="false"
-    latitude="52.3602160" longitude="4.8951680" (mapReady)="onMapReady($event)"></Mapbox>
+    <Mapbox rowSpan="2" [accessToken]="mapBoxToken" mapStyle="streets" hideCompass="true" zoomLevel="13"
+        showUserLocation="false" disableZoom="false" disableRotation="false" disableScroll="false" disableTilt="false"
+        latitude="52.3602160" 
+        longitude="4.8951680"
+        (mapReady)="onMapReady($event)">
+        <ns-map-marker 
+            *ngFor="let sensor of sensors" 
+            [id]="sensor.id" 
+            [title]="sensor.name" 
+            [subtitle]="'value: ' + sensor.value" 
+            [lat]="sensor.location.lat"
+            [lng]="sensor.location.lng"
+            [selected]="sensor.id === currentSensorId"
+            (tap)="selectSensor(sensor)"
+            (calloutTap)="selectSensor(sensor)"
+        ></ns-map-marker>
+    </Mapbox>
 
   <ScrollView row="2" verticalAlignment="bottom" horizontalAlignment="center">
     <StackLayout>
-      <ActivityIndicator width="100" height="150" class="activity-indicator" *ngIf="loading" busy="true">
-      </ActivityIndicator>
-
-      <ns-map-list-item *ngFor="let sensor of sensors" [sensor]="sensor" [selected]="sensor === currentSensor"
-        (select)="selectSensor($event, true)">
-      </ns-map-list-item>
+        <ActivityIndicator width="100" height="150" class="activity-indicator" *ngIf="loading" busy="true">
+        </ActivityIndicator>
+          
+        <ns-map-list-item *ngFor="let sensor of sensors" [sensor]="sensor" [selected]="sensor.id === currentSensorId"
+            (select)="selectSensor(sensor, true)">
+        </ns-map-list-item>
     </StackLayout>
   </ScrollView>
 </GridLayout>

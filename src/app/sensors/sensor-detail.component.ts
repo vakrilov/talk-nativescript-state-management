@@ -9,16 +9,16 @@ import { SensorService } from "./sensor.service";
   moduleId: module.id,
   templateUrl: "./sensor-detail.component.html"
 })
-export class SensorDetail implements OnInit {
-  sensor: Sensor;
 
-  constructor(
-    private service: SensorService,
-    private route: ActivatedRoute
-  ) { }
+export class SensorDetailComponent {
+    sensor: Sensor;
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.params.id;
-    this.sensor = this.service.getItem(id);
-  }
+    constructor(
+        private service: SensorService,
+        private route: ActivatedRoute
+    ) {
+        const id = this.route.snapshot.params.id;
+        this.sensor = this.service.getItem(id);
+    }
+
 }

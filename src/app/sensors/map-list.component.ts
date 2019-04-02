@@ -6,77 +6,41 @@ import { MapBoxAccessToken } from "../../constants";
 import { MapboxViewApi, MapboxMarker } from "nativescript-mapbox";
 import { RouterExtensions } from "nativescript-angular/router";
 
-type SensorVM = Sensor & { marker?: MapboxMarker };
-
 @Component({
-  selector: "ns-items",
-  moduleId: module.id,
-  templateUrl: "./map-list.component.html"
+    selector: "ns-items",
+    moduleId: module.id,
+    templateUrl: "./map-list.component.html"
 })
 export class MapListComponent implements OnInit {
-  mapBoxToken: string = MapBoxAccessToken;
+    mapBoxToken: string = MapBoxAccessToken;
+    mapView: MapboxViewApi;
 
-  sensors: Array<SensorVM>;
-  currentSensor: SensorVM;
-  loading: boolean;
+    sensors: Array<Sensor>;
+    currentSensorId: string;
+    loading: boolean;
 
-  mapView: MapboxViewApi;
+    constructor(private service: SensorService, private router: RouterExtensions) { }
 
-  constructor(private service: SensorService, private router: RouterExtensions) { }
-
-  ngOnInit(): void {
-    this.loading = true;
-    this.service.getItems().subscribe((items) => {
-      this.sensors = items;
-      this.renderMap();
-      this.loading = false;
-    });
-  }
-
-  onMapReady(args): void {
-    this.mapView = args.map;
-    this.renderMap();
-  }
-
-  selectSensor(selectedSensor: SensorVM, shouldNavigate: boolean = false) {
-    console.log('---> selectSensor', selectedSensor.id);
-
-    const selectSameSensor = this.currentSensor && this.currentSensor.id === selectedSensor.id;
-
-    if (selectSameSensor && shouldNavigate) {
-      console.log('----> Navigate to sensor!');
-      this.router.navigateByUrl("/sensor/" + selectedSensor.id)
-      return;
+    ngOnInit(): void {
+        this.loading = true;
+        this.service.getItems().subscribe((items) => {
+            this.sensors = items;
+            this.loading = false;
+        });
     }
 
-    if (!selectSameSensor) {
-      selectedSensor.marker.update({ ...selectedSensor.marker, selected: true });
+    onMapReady(args): void {
+        this.mapView = args.map;
     }
 
-    this.currentSensor = selectedSensor;
-  }
+    selectSensor(sensor: Sensor, shouldNavigate: boolean = false) {
+        const isSame = this.currentSensorId === sensor.id;
 
-  renderMap() {
-    if (!this.mapView || !this.sensors) {
-      return;
+        if (isSame && shouldNavigate) {
+            this.router.navigateByUrl("/sensor/" + sensor.id)
+            return;
+        }
+
+        this.currentSensorId = sensor.id;
     }
-
-    // Create markers for each sensor
-    this.sensors.forEach((c) => {
-      c.marker = this.createMarker(c);
-    });
-
-    this.mapView.addMarkers(this.sensors.map(c => c.marker));
-  }
-
-  private createMarker(s: SensorVM): MapboxMarker {
-    return {
-      id: s.id,
-      ...s.location,
-      title: s.name,
-      subtitle: "value: " + s.value,
-      onTap: zonedCallback(() => this.selectSensor(s)),
-      onCalloutTap: zonedCallback(() => this.selectSensor(s)),
-    };
-  }
 }

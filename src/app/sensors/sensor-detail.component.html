@@ -1,8 +1,7 @@
 <ActionBar title="Details" class="action-bar"></ActionBar>
-<FlexboxLayout flexDirection="column" class="page">
-  <FlexboxLayout class="m-15">
-    <Label class="h2" [text]="sensor.id + '. '"></Label>
-    <Label class="h2" [text]="sensor.description"></Label>
-  </FlexboxLayout>
-  <Label class="h4" [text]="sensor.value"></Label>
-</FlexboxLayout>
+<StackLayout class="page m-15">
+  <Label class="h1" [text]="sensor.name"></Label>
+  <Image height="200" width="100%" stretch="aspectFill" [src]="sensor.picture"></Image>
+  <Label class="h2" [text]="'Value: ' + sensor.value"></Label>
+  <Label [text]="sensor.description" textWrap="true"></Label>
+</StackLayout>
