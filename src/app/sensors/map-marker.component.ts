@@ -1,8 +1,7 @@
 import { Component, OnInit, SkipSelf, ElementRef, Input, Output, EventEmitter, SimpleChanges, OnChanges, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 
 import { Sensor } from "./sensor.model";
-import { MapListComponent } from "~/app/sensors/map-list.component";
-import { MapboxMarker } from "nativescript-mapbox";
+import { MapboxMarker, MapboxViewApi } from "nativescript-mapbox";
 import { registerElement } from "nativescript-angular/element-registry";
 import { Placeholder } from "tns-core-modules/ui/placeholder";
 
@@ -13,7 +12,9 @@ registerElement("ns-map-marker", () => Placeholder, { skipAddToDom: true })
   template: ``,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MapMarkerComponent implements OnInit, OnChanges, OnDestroy {
+export class MapMarkerComponent implements OnChanges, OnDestroy {
+  @Input() mapBoxViewApi: MapboxViewApi;
+
   @Input() id: any;
   @Input() title: string;
   @Input() subtitle: string;
@@ -24,20 +25,16 @@ export class MapMarkerComponent implements OnInit, OnChanges, OnDestroy {
   @Output() calloutTap: EventEmitter<Sensor> = new EventEmitter<Sensor>();
 
   private marker: MapboxMarker;
-
-  constructor(private map: MapListComponent) { }
-
-  ngOnInit(): void {
-    setTimeout(() => {
-      if (this.map.mapView) {
-        this.marker = this.createMarker();
-        console.log("Adding marker", this.id)
-        this.map.mapView.addMarkers([this.marker]);
-      }
-    }, 2000);
-  }
+  private markerAdded: boolean = false;
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (this.mapBoxViewApi && !this.markerAdded) {
+      console.log("Adding marker", this.id)
+      this.marker = this.createMarker();
+      this.mapBoxViewApi.addMarkers([this.marker]);
+      this.markerAdded = true;
+    }
+
     if (changes.selected && this.marker && this.marker.update) {
       console.log("Updating marker", this.id)
       this.marker.update({ ...this.marker, selected: changes.selected.currentValue });
@@ -45,9 +42,9 @@ export class MapMarkerComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.map.mapView) {
-      console.log("Removing marker", this.id)
-      this.map.mapView.removeMarkers([this.id])
+    if (this.mapBoxViewApi) {
+      console.log("Removing marker", this.id);
+      this.mapBoxViewApi.removeMarkers([this.id]);
     }
   }
 

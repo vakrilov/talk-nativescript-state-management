@@ -5,42 +5,38 @@ import { SensorService } from "./sensor.service";
 import { MapBoxAccessToken } from "../../constants";
 import { MapboxViewApi, MapboxMarker } from "nativescript-mapbox";
 import { RouterExtensions } from "nativescript-angular/router";
+import { Observable } from "rxjs";
 
 @Component({
-    selector: "ns-items",
-    moduleId: module.id,
-    templateUrl: "./map-list.component.html"
+  selector: "ns-items",
+  moduleId: module.id,
+  templateUrl: "./map-list.component.html"
 })
 export class MapListComponent implements OnInit {
-    mapBoxToken: string = MapBoxAccessToken;
-    mapView: MapboxViewApi;
+  mapBoxToken: string = MapBoxAccessToken;
+  mapBoxViewApi: MapboxViewApi;
 
-    sensors: Array<Sensor>;
-    currentSensorId: string;
-    loading: boolean;
+  sensors$: Observable<Sensor[]>;
+  currentSensorId: string;
 
-    constructor(private service: SensorService, private router: RouterExtensions) { }
+  constructor(private service: SensorService, private router: RouterExtensions) { }
 
-    ngOnInit(): void {
-        this.loading = true;
-        this.service.getItems().subscribe((items) => {
-            this.sensors = items;
-            this.loading = false;
-        });
+  ngOnInit(): void {
+    this.sensors$ = this.service.getItems();
+  }
+
+  onMapReady(args): void {
+    this.mapBoxViewApi = args.map;
+  }
+
+  selectSensor(sensor: Sensor, shouldNavigate: boolean = false) {
+    const isSame = this.currentSensorId === sensor.id;
+
+    if (isSame && shouldNavigate) {
+      this.router.navigateByUrl("/sensor/" + sensor.id)
+      return;
     }
 
-    onMapReady(args): void {
-        this.mapView = args.map;
-    }
-
-    selectSensor(sensor: Sensor, shouldNavigate: boolean = false) {
-        const isSame = this.currentSensorId === sensor.id;
-
-        if (isSame && shouldNavigate) {
-            this.router.navigateByUrl("/sensor/" + sensor.id)
-            return;
-        }
-
-        this.currentSensorId = sensor.id;
-    }
+    this.currentSensorId = sensor.id;
+  }
 }

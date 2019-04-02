@@ -8,7 +8,8 @@
         longitude="4.8951680"
         (mapReady)="onMapReady($event)">
         <ns-map-marker 
-            *ngFor="let sensor of sensors" 
+            *ngFor="let sensor of sensors$ | async" 
+            [mapBoxViewApi]="mapBoxViewApi"
             [id]="sensor.id" 
             [title]="sensor.name" 
             [subtitle]="'value: ' + sensor.value" 
@@ -20,12 +21,15 @@
         ></ns-map-marker>
     </Mapbox>
 
+
   <ScrollView row="2" verticalAlignment="bottom" horizontalAlignment="center">
     <StackLayout>
-        <ActivityIndicator width="100" height="150" class="activity-indicator" *ngIf="loading" busy="true">
+        <ActivityIndicator *ngIf="!(sensors$ | async)"
+            width="100" height="150" busy="true" 
+            class="activity-indicator">
         </ActivityIndicator>
           
-        <ns-map-list-item *ngFor="let sensor of sensors" [sensor]="sensor" [selected]="sensor.id === currentSensorId"
+        <ns-map-list-item *ngFor="let sensor of sensors$ | async" [sensor]="sensor" [selected]="sensor.id === currentSensorId"
             (select)="selectSensor(sensor, true)">
         </ns-map-list-item>
     </StackLayout>
