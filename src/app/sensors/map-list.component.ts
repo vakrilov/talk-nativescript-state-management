@@ -3,7 +3,10 @@ import { Component, OnInit } from "@angular/core";
 import { Sensor } from "./sensor.model";
 import { SensorService } from "./sensor.service";
 import { MapBoxAccessToken } from "../../constants";
-import { MapboxViewApi } from "nativescript-mapbox";
+import { MapboxViewApi, MapboxMarker } from "nativescript-mapbox";
+
+type SensorVM = Sensor & { marker?: MapboxMarker };
+
 @Component({
     selector: "ns-items",
     moduleId: module.id,
@@ -11,8 +14,8 @@ import { MapboxViewApi } from "nativescript-mapbox";
 })
 export class MapListComponent implements OnInit {
     mapBoxToken: string = MapBoxAccessToken;
-    sensors: Array<Sensor>;
-    currentSensor: Sensor;
+    sensors: Array<SensorVM>;
+    currentSensor: SensorVM;
     mapView: MapboxViewApi;
 
     constructor(private service: SensorService) { }
@@ -23,6 +26,7 @@ export class MapListComponent implements OnInit {
 
     onMapReady(args): void {
         this.mapView = args.map;
+        this.renderMap();
     }
 
     selectSensor(selectedSensor: Sensor) {
@@ -32,12 +36,36 @@ export class MapListComponent implements OnInit {
                 console.log('----> Navigate to customer!');
                 return;
             } else {
-                // this.currentCustomer.marker.update({ ...this.currentCustomer.marker, selected: false });
+                this.currentSensor.marker.update({ ...this.currentSensor.marker, selected: false });
                 this.currentSensor = null;
             }
         }
 
         this.currentSensor = selectedSensor;
-        // this.currentSensor.marker.update({ ...this.currentCustomer.marker, selected: true });
+        this.currentSensor.marker.update({ ...this.currentSensor.marker, selected: true });
+    }
+
+    private createMarker(s: SensorVM): MapboxMarker {
+        return {
+            id: s.id,
+            ...s.location,
+            title: s.description,
+            subtitle: s.value + "",
+            onTap: zonedCallback(() => this.selectSensor(s)),
+            onCalloutTap: zonedCallback(() => this.selectSensor(s)),
+        };
+    }
+
+    renderMap() {
+        if (!this.mapView || !this.sensors) {
+            return;
+        }
+
+        this.sensors.forEach((c) => {
+            c.marker = this.createMarker(c);
+            return c.marker;
+        });
+
+        this.mapView.addMarkers(this.sensors.map(c => c.marker));
     }
 }

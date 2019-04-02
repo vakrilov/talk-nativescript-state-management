@@ -7,8 +7,8 @@ import { Sensor } from "./sensor.model";
 })
 export class SensorService {
     private items:Array<Sensor> = [
-        { id: "1", description: "first", location: { latitude: 52.3680, longitude: 4.9036 }, value: 5 },
-        { id: "2", description: "second", location: { latitude: 52.3690, longitude: 4.9026 }, value: 10 }
+        { id: "1", description: "first", location: { lat: 52.3680, lng: 4.9036 }, value: 5 },
+        { id: "2", description: "second", location: { lat: 52.3690, lng: 4.9026 }, value: 10 }
     ]
 
     getItems(): Array<Sensor> {
