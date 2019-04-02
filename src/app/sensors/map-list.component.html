@@ -1,0 +1,16 @@
+<ActionBar title="Nearby">
+</ActionBar>
+
+<GridLayout rows="* *" columns="*">
+    <Mapbox rowSpan="2" [accessToken]="mapBoxToken" mapStyle="streets" hideCompass="true" zoomLevel="13"
+        showUserLocation="false" disableZoom="false" disableRotation="false" disableScroll="false" disableTilt="false"
+        latitude="52.3702160"
+        longitude="4.8951680"
+        (mapReady)="onMapReady($event)"></Mapbox>
+
+    <StackLayout row="2" verticalAlignment="bottom" horizontalAlignment="center">
+        <ns-map-list-item *ngFor="let sensor of sensors" [sensor]="sensor" [selected]="sensor === currentSensor"
+            (select)="selectSensor($event)">
+        </ns-map-list-item>
+    </StackLayout>
+</GridLayout>
