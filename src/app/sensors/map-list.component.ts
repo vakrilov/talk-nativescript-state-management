@@ -15,14 +15,22 @@ type SensorVM = Sensor & { marker?: MapboxMarker };
 })
 export class MapListComponent implements OnInit {
     mapBoxToken: string = MapBoxAccessToken;
+
     sensors: Array<SensorVM>;
     currentSensor: SensorVM;
+    loading: boolean;
+
     mapView: MapboxViewApi;
 
     constructor(private service: SensorService, private router: RouterExtensions) { }
 
     ngOnInit(): void {
-        this.sensors = this.service.getItems();
+        this.loading = true;
+        this.service.getItems().subscribe((items) => {
+            this.sensors = items;
+            this.renderMap();
+            this.loading = false;
+        });
     }
 
     onMapReady(args): void {
@@ -48,27 +56,27 @@ export class MapListComponent implements OnInit {
         this.currentSensor = selectedSensor;
     }
 
-    private createMarker(s: SensorVM): MapboxMarker {
-        return {
-            id: s.id,
-            ...s.location,
-            title: s.description,
-            subtitle: s.value + "",
-            onTap: zonedCallback(() => this.selectSensor(s)),
-            onCalloutTap: zonedCallback(() => this.selectSensor(s)),
-        };
-    }
-
     renderMap() {
         if (!this.mapView || !this.sensors) {
             return;
         }
 
+        // Create markers for each sensor
         this.sensors.forEach((c) => {
             c.marker = this.createMarker(c);
-            return c.marker;
         });
 
         this.mapView.addMarkers(this.sensors.map(c => c.marker));
+    }
+
+    private createMarker(s: SensorVM): MapboxMarker {
+        return {
+            id: s.id,
+            ...s.location,
+            title: s.name,
+            subtitle: "value: "  + s.value,
+            onTap: zonedCallback(() => this.selectSensor(s)),
+            onCalloutTap: zonedCallback(() => this.selectSensor(s)),
+        };
     }
 }

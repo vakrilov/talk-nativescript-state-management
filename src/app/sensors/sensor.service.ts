@@ -1,21 +1,21 @@
 import { Injectable } from "@angular/core";
 
 import { Sensor } from "./sensor.model";
+import { Observable, of } from "rxjs";
+import { delay } from 'rxjs/operators';
+import { data as initialData } from './sensor.data';
 
 @Injectable({
     providedIn: "root"
 })
 export class SensorService {
-    private items:Array<Sensor> = [
-        { id: "1", description: "first", location: { lat: 52.3680, lng: 4.9036 }, value: 5 },
-        { id: "2", description: "second", location: { lat: 52.3690, lng: 4.9026 }, value: 10 }
-    ]
-
-    getItems(): Array<Sensor> {
-        return this.items;
+    getItems(): Observable<Sensor[]> {
+        return of(initialData).pipe(
+            delay(4000)
+        );
     }
 
     getItem(id: string): Sensor {
-        return this.items.filter((item) => item.id === id)[0];
+        return initialData.filter((item) => item.id === id)[0];
     }
 }
