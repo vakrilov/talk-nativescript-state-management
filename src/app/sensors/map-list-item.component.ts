@@ -7,7 +7,7 @@ import { Sensor } from '~/app/sensors/sensor.model';
   styleUrls: ['./map-list-item.component.css'],
   moduleId: module.id,
 })
-export class MapListItemComponent{
+export class MapListItemComponent {
   @Input() sensor: Sensor;
   @Input() selected: boolean;
   @Output() select: EventEmitter<Sensor> = new EventEmitter<Sensor>();

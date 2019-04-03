@@ -1,22 +1,23 @@
 .item {
-    color: #5dbaf9;
-    background-color: white
+  color: #5dbaf9;
+  background-color: white
 }
 
 .item>Button {
-    width: 40;
-    height: 40;
-    border-radius: 20;
-    margin: 10;
-    color: white;
-    background-color: #5dbaf9
+  width: 40;
+  height: 40;
+  border-radius: 20;
+  margin: 10;
+  color: white;
+  background-color: #5dbaf9
 }
 
 .selected {
-    color: white;
-    background-color: #5dbaf9
+  color: white;
+  background-color: #5dbaf9
 }
+
 .selected>Button {
-    color: #5dbaf9;
-    background-color: white
+  color: #5dbaf9;
+  background-color: white
 }
