@@ -1,3 +1,6 @@
 {
-    "nativescript.iosTeamId": "CHSQ3M3P37"
+    "nativescript.iosTeamId": "CHSQ3M3P37",
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "javascript.preferences.importModuleSpecifier": "relative",
+    "editor.detectIndentation": false
 }

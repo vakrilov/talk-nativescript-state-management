@@ -14,11 +14,11 @@ export class SensorDetailComponent {
     sensor: Sensor;
 
     constructor(
-        private service: SensorsQuery,
+        private query: SensorsQuery,
         private route: ActivatedRoute
     ) {
         const id = this.route.snapshot.params.id;
-        this.sensor = this.service.getEntity(id);
+        this.sensor = this.query.getEntity(id);
     }
 
 }

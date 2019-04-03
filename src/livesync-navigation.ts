@@ -5,34 +5,34 @@ import { RouterExtensions } from "nativescript-angular/router";
 import { snapshotManager } from '@datorama/akita';
 
 let cachedUrl: string;
-let storeSnapshot;
+let storeSnapshot: any;
 onBeforeLivesync.subscribe(moduleRef => {
-  console.log("#### onBeforeLivesync");
-  if (moduleRef) {
-    const router = <Router>moduleRef.injector.get(Router);
-    cachedUrl = router.url;
-    console.log("-------> Cached URL: " + cachedUrl);
+    console.log("#### onBeforeLivesync");
+    if (moduleRef) {
+        const router = <Router>moduleRef.injector.get(Router);
+        cachedUrl = router.url;
+        console.log("-------> Caching URL: " + cachedUrl);
 
-    storeSnapshot = snapshotManager.getStoresSnapshot();
-    console.dir(storeSnapshot);
-    console.log("-------> Cached Store: ");
-  }
+        storeSnapshot = snapshotManager.getStoresSnapshot();
+        console.dir(storeSnapshot);
+        console.log("-------> Caching Store: ");
+    }
 });
 
 onAfterLivesync.subscribe(({ moduleRef, error }) => {
-  console.log(`#### onAfterLivesync moduleRef: ${moduleRef} error: ${error}`);
-  if (moduleRef) {
-    if (storeSnapshot) {
-      snapshotManager.setStoresSnapshot(storeSnapshot);
-      storeSnapshot = null;
-    }
+    console.log(`#### onAfterLivesync moduleRef: ${moduleRef} error: ${error}`);
+    if (moduleRef) {
+        if (storeSnapshot) {
+            snapshotManager.setStoresSnapshot(storeSnapshot);
+            storeSnapshot = null;
+        }
 
-    const router = <RouterExtensions>moduleRef.injector.get(RouterExtensions);
-    const ngZone = <NgZone>moduleRef.injector.get(NgZone);
-    if (router && cachedUrl) {
-      ngZone.run(() => { // <--  should be wrapped in ngZone
-        router.navigateByUrl(cachedUrl, { animated: false });
-      });
+        const router = <RouterExtensions>moduleRef.injector.get(RouterExtensions);
+        const ngZone = <NgZone>moduleRef.injector.get(NgZone);
+        if (router && cachedUrl) {
+            ngZone.run(() => { // <--  should be wrapped in ngZone
+                router.navigateByUrl(cachedUrl, { animated: false, clearHistory: true });
+            });
+        }
     }
-  }
-}); 
+});

@@ -6,6 +6,7 @@ import { RouterExtensions } from "nativescript-angular/router";
 
 import { MapBoxAccessToken } from "../../constants";
 import { Sensor, SensorsQuery, SensorsStore } from "./state";
+import { LoginService } from "../login/state";
 
 @Component({
   selector: "ns-items",
@@ -19,7 +20,11 @@ export class MapListComponent implements OnInit {
   sensors$: Observable<Sensor[]>;
   active$: Observable<Sensor>;
 
-  constructor(private query: SensorsQuery, private store: SensorsStore, private router: RouterExtensions) { }
+  constructor(
+    private query: SensorsQuery,
+    private store: SensorsStore,
+    private router: RouterExtensions,
+    private login: LoginService) { }
 
   ngOnInit(): void {
     this.sensors$ = this.query.selectAll();
@@ -39,5 +44,11 @@ export class MapListComponent implements OnInit {
     }
 
     this.store.setActive(sensor.id);
+  }
+  
+  logout() {
+    this.login.logout().then(() => {
+      this.router.navigateByUrl("/login", { clearHistory: true });
+    })
   }
 }

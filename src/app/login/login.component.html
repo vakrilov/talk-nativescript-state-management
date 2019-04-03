@@ -1,0 +1,39 @@
+<GridLayout class="page" rows="* auto">
+    <StackLayout class="form">
+        <Image class="logo" src="~/images/logo.png"></Image>
+        <Label class="header" text="STATE DEMO"></Label>
+
+        <StackLayout class="input-field">
+            <TextField class="input" hint="Email" keyboardType="email" autocorrect="false" autocapitalizationType="none"
+                [(ngModel)]="username" returnKeyType="next"></TextField>
+            <StackLayout class="hr-light"></StackLayout>
+        </StackLayout>
+
+        <StackLayout class="input-field">
+            <TextField class="input" hint="Password" secure="true" [(ngModel)]="password"
+                [returnKeyType]="isLoggingIn ? 'done' : 'next'"></TextField>
+            <StackLayout class="hr-light"></StackLayout>
+        </StackLayout>
+
+        <StackLayout *ngIf="!isLoggingIn" class="input-field">
+            <TextField class="input" hint="Confirm password" secure="true" [(ngModel)]="confirmPassword"
+                returnKeyType="done"></TextField>
+            <StackLayout class="hr-light"></StackLayout>
+        </StackLayout>
+
+        <Button [text]="isLoggingIn ? 'Log In' : 'Sign Up'" (tap)="submit()" class="btn btn-primary m-t-20"></Button>
+        <Label *ngIf="isLoggingIn" text="Forgot your password?" class="login-label"></Label>
+    </StackLayout>
+
+    <Label class="login-label sign-up-label" (tap)="toggleForm()" row="1">
+        <FormattedString>
+            <Span [text]="isLoggingIn ? 'Don’t have an account? ' : 'Back to Login'"></Span>
+            <Span [text]="isLoggingIn ? 'Sign up' : ''" class="bold"></Span>
+        </FormattedString>
+    </Label>]
+    
+
+    <GridLayout rowSpan="2" *ngIf="loading$ | async" class="overlay">
+        <ActivityIndicator width="100" height="100" busy="true" class="activity-indicator"></ActivityIndicator>
+    </GridLayout>
+</GridLayout>

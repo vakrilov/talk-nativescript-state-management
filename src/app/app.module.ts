@@ -7,9 +7,9 @@ import { MapListComponent } from "./sensors/map-list.component";
 import { SensorDetailComponent } from "./sensors/sensor-detail.component";
 import { MapListItemComponent } from './sensors/map-list-item.component';
 import { MapMarkerComponent } from "./sensors/map-marker.component";
+import { LoginComponent } from './login/login.component';
 
-// Uncomment and add to NgModule imports if you need to use two-way binding
-// import { NativeScriptFormsModule } from "nativescript-angular/forms";
+import { NativeScriptFormsModule } from "nativescript-angular/forms";
 
 // Uncomment and add to NgModule imports if you need to use the HttpClient wrapper
 // import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
@@ -20,6 +20,7 @@ import { MapMarkerComponent } from "./sensors/map-marker.component";
     ],
     imports: [
         NativeScriptModule,
+        NativeScriptFormsModule,
         AppRoutingModule
     ],
     declarations: [
@@ -27,7 +28,8 @@ import { MapMarkerComponent } from "./sensors/map-marker.component";
         MapListComponent,
         SensorDetailComponent,
         MapListItemComponent,
-        MapMarkerComponent
+        MapMarkerComponent,
+        LoginComponent
     ],
     providers: [],
     schemas: [
