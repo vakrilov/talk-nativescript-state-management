@@ -5,8 +5,9 @@ import { MapboxViewApi } from "nativescript-mapbox";
 import { RouterExtensions } from "nativescript-angular/router";
 
 import { MapBoxAccessToken } from "../../constants";
-import { Sensor, SensorsQuery, SensorsStore } from "./state";
+import { Sensor, SensorsService } from "./state";
 import { LoginService } from "../login/state";
+import {  } from "./state/sensor.service";
 
 @Component({
   selector: "ns-items",
@@ -18,32 +19,25 @@ export class MapListComponent implements OnInit {
   mapBoxViewApi: MapboxViewApi;
 
   sensors$: Observable<Sensor[]>;
-  active$: Observable<Sensor>;
+  activeId$: Observable<string>;
 
   constructor(
-    private query: SensorsQuery,
-    private store: SensorsStore,
+    private service: SensorsService,
     private router: RouterExtensions,
     private login: LoginService) { }
 
   ngOnInit(): void {
-    this.sensors$ = this.query.selectAll();
-    this.active$ = this.query.selectActive();
-  }
-
-  onMapReady(args): void {
-    this.mapBoxViewApi = args.map;
+    this.sensors$ = this.service.loadSensors();
+    this.activeId$ = this.service.query.selectActiveId();
   }
 
   selectSensor(sensor: Sensor, shouldNavigate: boolean = false) {
-    const isSame = this.query.getActiveId() === sensor.id;
-
-    if (isSame && shouldNavigate) {
+    if (shouldNavigate && this.service.query.getActiveId() === sensor.id) {
       this.router.navigateByUrl("/sensor/" + sensor.id)
       return;
     }
 
-    this.store.setActive(sensor.id);
+    this.service.store.setActive(sensor.id);
   }
   
   logout() {

@@ -55,6 +55,7 @@ export class MapMarkerComponent implements OnChanges, OnDestroy {
       lng: this.lng,
       title: this.title,
       subtitle: this.subtitle + "",
+      selected: this.selected,
       onTap: zonedCallback(() => this.tap.next(this.id)),
       onCalloutTap: zonedCallback(() => this.calloutTap.next(this.id)),
     };

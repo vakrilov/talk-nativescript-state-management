@@ -7,7 +7,7 @@
     showUserLocation="false" disableZoom="false" disableRotation="false" disableScroll="false" disableTilt="false"
     latitude="52.3602160" 
     longitude="4.8951680"
-    (mapReady)="onMapReady($event)">
+    (mapReady)="this.mapBoxViewApi = $event.map">
     <ns-map-marker 
       *ngFor="let sensor of sensors$ | async" 
       [mapBoxViewApi]="mapBoxViewApi"
@@ -16,19 +16,19 @@
       [subtitle]="'value: ' + sensor.value" 
       [lat]="sensor.location.lat"
       [lng]="sensor.location.lng"
-      [selected]="sensor === (active$ | async)"
+      [selected]="sensor.id === (activeId$ | async)"
       (tap)="selectSensor(sensor)"
       (calloutTap)="selectSensor(sensor)"></ns-map-marker>
   </Mapbox>
 
   <ScrollView row="2" verticalAlignment="bottom" horizontalAlignment="center">
     <StackLayout>
-        <ActivityIndicator *ngIf="!(sensors$ | async)"
+        <ActivityIndicator *ngIf="(sensors$ | async).length === 0"
             width="100" height="150" busy="true" 
             class="activity-indicator">
         </ActivityIndicator>
           
-        <ns-map-list-item *ngFor="let sensor of sensors$ | async" [sensor]="sensor" [selected]="sensor === (active$ | async)"
+        <ns-map-list-item *ngFor="let sensor of sensors$ | async" [sensor]="sensor" [selected]="sensor.id === (activeId$ | async)"
             (select)="selectSensor(sensor, true)">
         </ns-map-list-item>
     </StackLayout>
