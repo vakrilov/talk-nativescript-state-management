@@ -5,21 +5,17 @@ import { RouterExtensions } from "nativescript-angular/router";
 
 import { persistState, } from '@datorama/akita';
 
+// Define localStorage. Akita uses it internally and crashes if it is not declared.
+(<any>global).localStorage = undefined;
+
 let inMemStore = {};
 const inMemoryStorage = {
     setItem: (key, value) => inMemStore[key] = value,
     getItem: (key) => inMemStore[key],
     clear: () => inMemStore = {}
 };
+const persistAkitaStores = () => persistState({ storage: inMemoryStorage });
 
-// Go to node_modules/@datorama/akita/fesm5
-// find `const isNotBrowser = typeof window === 'undefined';`
-// and replace it with `const isNotBrowser = false`
-function persistAkitaStores() {
-    (<any>global).localStorage = {};
-    persistState({ storage: inMemoryStorage });
-    (<any>global).localStorage = undefined;
-}
 persistAkitaStores();
 
 let cachedUrl: string;
